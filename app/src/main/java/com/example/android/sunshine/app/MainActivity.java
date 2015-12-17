@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +63,7 @@ public class MainActivity extends ActionBarActivity {
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-            // an ArrayList of raw forecast data
+            // creates an ArrayList of raw forecast data
             List<String> weekForecast = new ArrayList<>();
             weekForecast.add("Today - Sunny - 88/63");
             weekForecast.add("Tomorrow - Foggy - 70/46");
@@ -71,7 +72,7 @@ public class MainActivity extends ActionBarActivity {
             weekForecast.add("Fri - Foggy - 70/46");
             weekForecast.add("Sat - Sunny - 76/68");
 
-            //ArrayAdapter to convert raw forecast data to list TextViews
+            // converts raw forecast data to list TextViews
             ArrayAdapter<String> listArrayAdapter =
                     new ArrayAdapter<>(
                             // The current context
@@ -82,6 +83,16 @@ public class MainActivity extends ActionBarActivity {
                             R.id.list_item_forecast_textview,
                             // forecast data
                             weekForecast);
+            // creates a ListView object and populate it with forecast_listview
+            // This is needed because you need to make a java object from the xml element,
+            // if you want to refer to it in a .java class.
+            // findViewById is a Activity and View method, that's why we use the rootView
+            // object (defined above) to get to it
+            ListView forecastListView =
+                    (ListView) rootView.findViewById(
+                            R.id.forecast_listview);
+            // binds the ListView object to the ArrayAdapter created earlier
+            forecastListView.setAdapter(listArrayAdapter);
 
             return rootView;
         }
