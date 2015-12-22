@@ -42,10 +42,11 @@ public class ForecastFragment extends Fragment {
         inflater.inflate(R.menu.forecastfragment, menu);
     }
 
-
-    public boolean onOptionItemSelected(MenuItem item){
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
         int id = item.getItemId();
         if (id == R.id.action_refresh) {
+            new FetchWeatherTask().execute();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -91,6 +92,9 @@ public class ForecastFragment extends Fragment {
     }
 
     private class FetchWeatherTask extends AsyncTask<String, Void, String> {
+
+        private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
+
         /* BOILER PLATE CODE SNIPPET from UDACITY*/
 
         // These two need to be declared outside the try/catch
@@ -101,6 +105,9 @@ public class ForecastFragment extends Fragment {
         // Will contain the raw JSON response as a string.
         String forecastJsonStr = null;
 
+        //API Key
+        private final String apiKey = "&APPID=16f7461b02124fab04d85c3c3953c00b";
+
         protected String doInBackground(String... weatherData) {
             try
 
@@ -108,7 +115,8 @@ public class ForecastFragment extends Fragment {
                 // Construct the URL for the OpenWeatherMap query
                 // Possible parameters are available at OWM's forecast API page, at
                 // http://openweathermap.org/API#forecast
-                URL url = new URL("http://api.openweathermap.org/data/2.5/forecast/daily?q=94043&mode=json&units=metric&cnt=7");
+                String baseUrl = "http://api.openweathermap.org/data/2.5/forecast/daily?q=94043&mode=json&units=metric&cnt=7";
+                URL url = new URL(baseUrl.concat(apiKey));
 
                 // Create the request to OpenWeatherMap, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
@@ -137,6 +145,7 @@ public class ForecastFragment extends Fragment {
                     forecastJsonStr = null;
                 }
                 forecastJsonStr = buffer.toString();
+                Log.v(LOG_TAG, "Forecast JSON String: " + forecastJsonStr);
             } catch (
                     IOException e
                     )
