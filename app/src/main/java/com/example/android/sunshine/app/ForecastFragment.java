@@ -12,8 +12,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -102,12 +104,24 @@ public class ForecastFragment extends Fragment {
         // if you want to refer to it in a .java class.
         // findViewById is a Activity and View method, that's why we use the rootView
         // object (defined above) to get to it
-        ListView forecastListView =
+        final ListView forecastListView =
                 (ListView) rootView.findViewById(
                         R.id.forecast_listview);
         // binds the ListView object to the ArrayAdapter created earlier
         forecastListView.setAdapter(mForecastAdapter);
-
+        // detects a ListView item click and performs a corresponding action for that item
+        forecastListView.setOnItemClickListener(
+                new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView,
+                                            View view,
+                                            int position,
+                                            long id) {
+                        Toast.makeText(getActivity(),
+                                mForecastAdapter.getItem(position),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
         return rootView;
     }
 
@@ -139,7 +153,7 @@ public class ForecastFragment extends Fragment {
         /**
          * Take the String representing the complete forecast in JSON Format and
          * pull out the data we need to construct the Strings needed for the wireframes.
-         *
+         * <p/>
          * Fortunately parsing is easy:  constructor takes the JSON string and converts it
          * into an Object hierarchy for us.
          */
@@ -203,7 +217,7 @@ public class ForecastFragment extends Fragment {
                 double low = temperatureObject.getDouble(OWM_MIN);
 
                 highAndLow = formatHighLows(high, low);
-                resultStrs[i] = day + " - " + description + " - " + highAndLow;
+                resultStrs[i] = day + ": " + description + ", " + highAndLow;
             }
 
             return resultStrs;
@@ -278,8 +292,8 @@ public class ForecastFragment extends Fragment {
                     // Stream was empty.  No point in parsing.
                     return null;
                 }
-                    forecastJsonStr = buffer.toString();
-            } catch (IOException e)  {
+                forecastJsonStr = buffer.toString();
+            } catch (IOException e) {
                 Log.e("ForecastFragment", "Error ", e);
                 // If the code didn't successfully get the weather data, there's no point in attempting
                 // to parse it.
@@ -310,8 +324,10 @@ public class ForecastFragment extends Fragment {
         @Override
         protected void onPostExecute(String[] strings) {
             super.onPostExecute(strings);
-            mForecastAdapter.clear();
-            mForecastAdapter.addAll(strings);
+            if (strings != null) {
+                mForecastAdapter.clear();
+                mForecastAdapter.addAll(strings);
+            }
         }
     }
 }
