@@ -62,7 +62,6 @@ public class ForecastFragment extends Fragment {
         int id = item.getItemId();
         if (id == R.id.action_refresh) {
             FetchWeatherTask weatherTask = new FetchWeatherTask();
-            //String[] weatherData= {"daily", "98005", "metric", "7"};
             weatherTask.execute("98005");
             return true;
         }
