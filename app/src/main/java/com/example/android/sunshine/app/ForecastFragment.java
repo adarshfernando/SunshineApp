@@ -31,8 +31,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by adarshf on 12/17/15.
@@ -52,8 +50,23 @@ public class ForecastFragment extends Fragment {
     }
 
     @Override
+    public void onStart(){
+        super.onStart();
+        updateWeather();
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.forecastfragment, menu);
+    }
+
+    private void updateWeather() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String userZip = sharedPref.getString(
+                getString(R.string.pref_location_key),
+                getString(R.string.pref_location_default));
+        FetchWeatherTask weatherTask = new FetchWeatherTask();
+        weatherTask.execute(userZip);
     }
 
     @Override
@@ -62,13 +75,9 @@ public class ForecastFragment extends Fragment {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String userZip = sharedPref.getString(
-                getString(R.string.pref_location_key),
-                getString(R.string.pref_location_default));
+
         if (id == R.id.action_refresh) {
-            FetchWeatherTask weatherTask = new FetchWeatherTask();
-            weatherTask.execute(userZip);
+            updateWeather();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -77,18 +86,6 @@ public class ForecastFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        // creates an ArrayList of raw forecast data
-        String[] data = {
-                "Today - Sunny - 88/63",
-                "Tomorrow - Foggy - 70/46",
-                "Wed - Cloudy - 72/63",
-                "Thu - Rainy - 64/51",
-                "Fri - Foggy - 70/46",
-                "Sat - Sunny - 76/68"
-        };
-
-        List<String> weekForecast = new ArrayList<>(Arrays.asList(data));
 
         // converts raw forecast data to list TextViews
         mForecastAdapter =
@@ -99,8 +96,8 @@ public class ForecastFragment extends Fragment {
                         R.layout.list_item_forecast,
                         // ID of target textView to populate
                         R.id.list_item_forecast_textview,
-                        // forecast data
-                        weekForecast);
+                        // Empty ArrayList
+                        new ArrayList<String>());
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
@@ -272,9 +269,9 @@ public class ForecastFragment extends Fragment {
                         .appendQueryParameter(DAYS_PARAM, Integer.toString(numDays))
                         .appendQueryParameter(APPID_PARAM, apiKey)
                         .build();
-                //constructs URL from uri.builder
+                // Constructs URL from uri.builder
                 URL url = new URL(builtUri.toString());
-                Log.v(LOG_TAG, "Built URI " + builtUri.toString());
+                // Log.v(LOG_TAG, "Built URI " + builtUri.toString());
 
                 // Create the request to OpenWeatherMap, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
