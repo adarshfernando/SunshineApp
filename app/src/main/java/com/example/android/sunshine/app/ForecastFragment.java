@@ -118,6 +118,7 @@ public class ForecastFragment extends Fragment {
                                             int position,
                                             long id) {
                         String forecast = mForecastAdapter.getItem(position);
+                        // creates intent to pass forecast String to DetailActivity
                         Intent detailActivityIntent = new Intent(
                                 getActivity(),
                                 DetailActivity.class);
