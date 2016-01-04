@@ -11,4 +11,12 @@
         android:singleLine="true"
         android:title="@string/pref_location_title" />
 
+    <ListPreference
+        android:key="@string/pref_units_key"
+        android:defaultValue="@string/pref_units_default"
+        android:summary="@string/pref_units_summary"
+        android:title="@string/pref_units_label"
+        android:entries="@array/pref_units_entries"
+        android:entryValues="@array/pref_units_values"/>
+
 </PreferenceScreen>
