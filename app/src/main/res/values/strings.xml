@@ -7,13 +7,16 @@
     <string name="title_activity_detail">Forecast Details</string>
     <string name="title_activity_settings">Settings</string>
 
-    // Setting>Location string resources
+    // Settings>Location string resources
     <string name="pref_location_title">Location</string>
     <string name="pref_location_default" translatable="false">98005</string>
     <string name="pref_location_summary">Change your default location</string>
     <string name="pref_location_key" translatable="false">location</string>
 
-    // Setting>Units string resources
+    // Settings>Open Location string resources
+    <string name="pref_open_location_title">Open Location</string>
+
+    // Settings>Units string resources
     <string name="pref_units_label">Temperature Units</string>
     <string name="pref_units_label_metric">Metric</string>
     <string name="pref_units_label_imperial">Imperial</string>
