@@ -33,7 +33,7 @@ public class MainActivity extends ActionBarActivity {
         return true;
     }
 
-    private void openPreferredLocationInMap() {
+    private void onOpenLocationSelected() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         String userZip = sharedPref.getString(
                 getString(R.string.pref_location_key),
@@ -71,7 +71,7 @@ public class MainActivity extends ActionBarActivity {
 
 
         if (id == R.id.action_map) {
-            openPreferredLocationInMap();
+            onOpenLocationSelected();
             return true;
         }
 
