@@ -48,19 +48,6 @@ public class DetailActivity extends ActionBarActivity {
         }
     }
 
-/*
-    // Call to update the share intent
-    private void doShare() {
-        if (mShareActionProvider != null) {
-            Intent shareIntent = new Intent();
-            mShareActionProvider.setShareIntent(shareIntent);
-            shareIntent.putExtra(Intent.EXTRA_TEXT, forecastStr);
-            startActivity(shareIntent);
-            Log.v(LOG_TAG, "EXTRA_TEXT: " + forecastStr);
-        }
-    }
-*/
-
     private void openPreferredLocationInMap() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         String userZip = sharedPref.getString(
@@ -90,11 +77,6 @@ public class DetailActivity extends ActionBarActivity {
 
         if (id == R.id.action_map) {
             openPreferredLocationInMap();
-            return true;
-        }
-
-        if (id == R.id.action_share) {
-            // add method
             return true;
         }
 
@@ -138,14 +120,11 @@ public class DetailActivity extends ActionBarActivity {
             }
             return rootView;
         }
+
         @Override
         public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
             // Inflate the menu; this adds items to the action bar if it is present.
-           inflater.inflate(R.menu.detail, menu);
-
-
-            // Locate MenuItem with ShareActionProvider
-            MenuItem menuItem = menu.findItem(R.id.action_share);
+            inflater.inflate(R.menu.detail, menu);
 
             // Fetch and store ShareActionProvider
             ShareActionProvider mShareActionProvider = new ShareActionProvider(getActivity());
@@ -157,9 +136,10 @@ public class DetailActivity extends ActionBarActivity {
                 Log.d(LOG_TAG, "Share Action Provider is null?");
             }
         }
+
         private Intent createShareForecastIntent() {
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
-            shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+            shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
             shareIntent.setType("text/plain");
             shareIntent.putExtra(Intent.EXTRA_TEXT,
                     mForecastStr + FORECAST_SHARE_HASHTAG);
